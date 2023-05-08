@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "motoko_bootcamp_ba_backend": {
+      "main": "src/motoko_bootcamp_ba_backend/main.mo",
+      "type": "motoko"
+    },
+    "motoko_bootcamp_ba_frontend": {
+      "dependencies": [
+        "motoko_bootcamp_ba_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/motoko_bootcamp_ba_frontend/src/index.html"
+      },
+      "source": [
+        "src/motoko_bootcamp_ba_frontend/assets",
+        "dist/motoko_bootcamp_ba_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
