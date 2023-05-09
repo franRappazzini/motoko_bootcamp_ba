@@ -7,11 +7,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 function initCanisterEnv() {
   let localCanisters, prodCanisters;
   try {
-    localCanisters = require(path.resolve(
-      ".dfx",
-      "local",
-      "canister_ids.json"
-    ));
+    localCanisters = require(path.resolve(".dfx", "local", "canister_ids.json"));
   } catch (error) {
     console.log("No local canister_ids.json found. Continuing production");
   }
@@ -22,15 +18,13 @@ function initCanisterEnv() {
   }
 
   const network =
-    process.env.DFX_NETWORK ||
-    (process.env.NODE_ENV === "production" ? "ic" : "local");
+    process.env.DFX_NETWORK || (process.env.NODE_ENV === "production" ? "ic" : "local");
 
   const canisterConfig = network === "local" ? localCanisters : prodCanisters;
 
   return Object.entries(canisterConfig).reduce((prev, current) => {
     const [canisterName, canisterDetails] = current;
-    prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
-      canisterDetails[network];
+    prev[canisterName.toUpperCase() + "_CANISTER_ID"] = canisterDetails[network];
     return prev;
   }, {});
 }
@@ -40,7 +34,11 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 
 const frontendDirectory = "motoko_bootcamp_ba_frontend";
 
-const frontend_entry = path.join("src", frontendDirectory, "src", "index.html");
+const deployProject = "calculator";
+
+const frontend_entry = path.join("src", frontendDirectory, "src", deployProject, "index.html");
+
+console.log({ frontend_entry });
 
 module.exports = {
   target: "web",
@@ -99,7 +97,7 @@ module.exports = {
         {
           from: `src/${frontendDirectory}/src/.ic-assets.json*`,
           to: ".ic-assets.json5",
-          noErrorOnMissing: true
+          noErrorOnMissing: true,
         },
       ],
     }),

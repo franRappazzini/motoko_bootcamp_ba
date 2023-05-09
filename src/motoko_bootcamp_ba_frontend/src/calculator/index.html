@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+  </head>
+  <body>
+    <form id="form">
+      <input type="number" required placeholder="Number" id="input" />
+      <select name="option" id="select">
+        <option value="add" selected>Add</option>
+        <option value="sub">Substact</option>
+        <option value="mult">Mult</option>
+        <option value="div">Div</option>
+      </select>
+      <button type="submit" id="btn">Calculate</button>
+      <button type="button" id="restart">Restart</button>
+    </form>
+
+    <section style="margin-top: 16px; padding-left: 16px">
+      <span id="loading" style="display: none">Loading...</span>
+      <p
+        id="result"
+        style="
+          font-size: 24px;
+          font-weight: 600;
+          padding: 8px 16px;
+          border: 1px solid;
+          width: fit-content;
+          display: none;
+        "
+      ></p>
+    </section>
+
+    <!-- <script src="./index.js"></script> -->
+  </body>
+</html>
