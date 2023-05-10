@@ -15,6 +15,14 @@
     "calculator": {
       "main": "src/calculator/main.mo",
       "type": "motoko"
+    },
+    "homework_daily": {
+      "main": "src/homework_daily/main.mo",
+      "type": "motoko"
+    },
+    "student_wall": {
+      "main": "src/student_wall/main.mo",
+      "type": "motoko"
     }
   },
   "defaults": {
