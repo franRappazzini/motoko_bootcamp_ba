@@ -42,7 +42,7 @@ actor {
         return #ok(msg);
     };
 
-    public shared({caller}) func updateMessage(_messageId: Nat, _c: Content): async Result.Result<Text, Text> {
+    public shared({caller}) func updateMessage(_messageId: Nat, _c: Content): async Result.Result<(), Text> {
         switch(wall.get(_messageId)) {
             case(null) return #err("Message not found.");
             case(?res) {
@@ -53,24 +53,24 @@ actor {
                     creator = res.creator;
                 };
                 wall.put(_messageId, updated);
-                return #ok("Message updated successfully.");
+                return #ok();
             };
         };
     };
 
-    public shared({caller}) func deleteMessage(_messageId: Nat): async Result.Result<Text, Text> {
+    public shared({caller}) func deleteMessage(_messageId: Nat): async Result.Result<(), Text> {
         switch(wall.get(_messageId)) {
             case(null) return #err("Message not found.");
             case(?res) {
                 if(Principal.notEqual(caller, res.creator)) return #err("You don't are the owner.");
         
                 wall.delete(_messageId);
-                return #ok("Message deleted successfully.");
+                return #ok();
             };
         };
     };
 
-    public func upVote(_messageId: Nat): async Result.Result<Text, Text> {
+    public func upVote(_messageId: Nat): async Result.Result<(), Text> {
         let msg = switch(wall.get(_messageId)) {
             case(null) return #err("Message not found.");
             case(?res) {
@@ -80,12 +80,12 @@ actor {
                     creator = res.creator;
                 };
                 wall.put(_messageId, updated);
-                return #ok("Message voted successfully.");
+                return #ok();
             };
         };
     };
    
-    public func downVote(_messageId: Nat): async Result.Result<Text, Text> {
+    public func downVote(_messageId: Nat): async Result.Result<(), Text> {
         let msg = switch(wall.get(_messageId)) {
             case(null) return #err("Message not found.");
             case(?res) {
@@ -95,7 +95,7 @@ actor {
                     creator = res.creator;
                 };
                 wall.put(_messageId, updated);
-                return #ok("Message down voted successfully.");
+                return #ok();
             };
         };
     };

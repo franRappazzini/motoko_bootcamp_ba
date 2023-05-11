@@ -25,17 +25,17 @@ actor {
         return #ok(?hw);
     };
 
-    public func updateHomework(_index: Nat, _hw: Homework): async Result.Result<Text, Text> {
+    public func updateHomework(_index: Nat, _hw: Homework): async Result.Result<(), Text> {
         switch(?homeworks.get(_index)) {
             case(null) return #err("Homework doesn't exist."); 
             case(?res) {
                 homeworks.put(_index, _hw);
-                return #ok("HW updated successfully.");
+                return #ok();
             };
         };
     };
 
-    public func markAsComplete(_index: Nat): async Result.Result<Text, Text> {
+    public func markAsComplete(_index: Nat): async Result.Result<(), Text> {
         switch(?homeworks.get(_index)) {
             case(null) return #err("Homework doesn't exist.");
             case(?res) {
@@ -47,17 +47,17 @@ actor {
                 };
 
                 homeworks.put(_index, newHw);
-                return #ok("Homework completed successfully.");
+                return #ok();
             };
         };
     };
 
-    public func deleteHomework(_index: Nat): async Result.Result<Text, Text> {
+    public func deleteHomework(_index: Nat): async Result.Result<(), Text> {
         switch(?homeworks.get(_index)) {
             case(null) return #err("Homework doesn't exist.");
             case(?res) {
                 let removed =  homeworks.remove(_index);
-                return #ok("Homework deleted successfully.");
+                return #ok();
             };
         };
     };
