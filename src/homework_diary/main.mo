@@ -3,6 +3,8 @@ import Int "mo:base/Int";
 import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
+import Result "mo:base/Result";
+
 actor {
     type Homework = {
         title: Text;
@@ -18,26 +20,24 @@ actor {
         return homeworks.size() - 1;
     };
 
-    // TODO: agregar error
-    public func getHomework(_index: Nat): async ?Homework {
-        return ?homeworks.get(_index);
+    public func getHomework(_index: Nat): async Result.Result<?Homework, ()> {
+        let hw = homeworks.get(_index);
+        return #ok(?hw);
     };
 
-    // TODO: agregar error y ver el return type
-    public func updateHomework(_index: Nat, _hw: Homework): async ?Homework {
+    public func updateHomework(_index: Nat, _hw: Homework): async Result.Result<Text, Text> {
         switch(?homeworks.get(_index)) {
-            case(null) return null; // return error
+            case(null) return #err("Homework doesn't exist."); 
             case(?res) {
                 homeworks.put(_index, _hw);
-                return ?_hw;
+                return #ok("HW updated successfully.");
             };
         };
     };
 
-    // TODO: return correct values
-    public func markAsComplete(_index: Nat): async ?Bool {
+    public func markAsComplete(_index: Nat): async Result.Result<Text, Text> {
         switch(?homeworks.get(_index)) {
-            case(null) return null;
+            case(null) return #err("Homework doesn't exist.");
             case(?res) {
                 let newHw = {
                     title = res.title;
@@ -47,18 +47,17 @@ actor {
                 };
 
                 homeworks.put(_index, newHw);
-                return ?true;
+                return #ok("Homework completed successfully.");
             };
         };
     };
 
-    // TODO: return correct values
-    public func deleteHomework(_index: Nat): async Bool {
+    public func deleteHomework(_index: Nat): async Result.Result<Text, Text> {
         switch(?homeworks.get(_index)) {
-            case(null) return false;
+            case(null) return #err("Homework doesn't exist.");
             case(?res) {
                 let removed =  homeworks.remove(_index);
-                return true;
+                return #ok("Homework deleted successfully.");
             };
         };
     };
