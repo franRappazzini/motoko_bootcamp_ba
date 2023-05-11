@@ -7,6 +7,7 @@ import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
+import Array "mo:base/Array";
 
 actor {
     public type Content = {
@@ -100,7 +101,6 @@ actor {
     };
 
     public query func getAllMessages(): async ?[Message] {
-        // return ?HashMap.toArray();
         let buffMsg = Buffer.Buffer<Message>(1);
         for(msg in wall.vals()) {
             buffMsg.add(msg);
@@ -110,6 +110,17 @@ actor {
     };
 
     // public query func getAllMessagesRanked(): async ?[Message] {
+    //     let buffMsg = Buffer.Buffer<Message>(1);
+    //     for(msg in wall.vals()) {
+    //         buffMsg.add(msg);
+    //     };
+    //     let arrMsg = Buffer.toArray<Message>(buffMsg);
 
+    //     return Array.sortInPlace(arrMsg, compare)
+    // };
+
+    // // Función de comparación
+    // func compare(a: Message, b: Message) : Bool {
+    //     return a.vote > b.vote;
     // };
 } 
