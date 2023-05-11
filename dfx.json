@@ -23,6 +23,10 @@
     "student_wall": {
       "main": "src/student_wall/main.mo",
       "type": "motoko"
+    },
+    "motocoin": {
+      "main": "src/motocoin/main.mo",
+      "type": "motoko"
     }
   },
   "defaults": {
