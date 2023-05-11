@@ -5,6 +5,9 @@ import Nat "mo:base/Nat";
 import Hash "mo:base/Hash";
 import Bool "mo:base/Bool";
 import Buffer "mo:base/Buffer";
+import Result "mo:base/Result";
+import Text "mo:base/Text";
+
 actor {
     public type Content = {
         #Text: Text;
@@ -33,45 +36,42 @@ actor {
         return messageId - 1;
     };
 
-    // TODO: verificar return
-    public query func getMessage(_messageId: Nat): async ?Message {
+    public query func getMessage(_messageId: Nat): async Result.Result<?Message, ()> {
         let msg = wall.get(_messageId);
-        return msg;
+        return #ok(msg);
     };
 
-    // TODO: verificar return 
-    public shared({caller}) func updateMessage(_messageId: Nat, _c: Content): async Bool {
+    public shared({caller}) func updateMessage(_messageId: Nat, _c: Content): async Result.Result<Text, Text> {
         switch(wall.get(_messageId)) {
-            case(null) return false;
+            case(null) return #err("Message not found.");
             case(?res) {
-                if(Principal.notEqual(caller, res.creator)) return false;
+                if(Principal.notEqual(caller, res.creator)) return #err("You don't are the owner.");
                 let updated = {
                     vote = res.vote;
                     content = _c;
                     creator = res.creator;
                 };
                 wall.put(_messageId, updated);
-                return true;
+                return #ok("Message updated successfully.");
             };
         };
     };
 
-    // TODO: verificar return 
-    public shared({caller}) func deleteMessage(_messageId: Nat): async Bool{
+    public shared({caller}) func deleteMessage(_messageId: Nat): async Result.Result<Text, Text> {
         switch(wall.get(_messageId)) {
-            case(null) return false;
+            case(null) return #err("Message not found.");
             case(?res) {
-                if(Principal.notEqual(caller, res.creator)) return false;
+                if(Principal.notEqual(caller, res.creator)) return #err("You don't are the owner.");
         
                 wall.delete(_messageId);
-                return true;
+                return #ok("Message deleted successfully.");
             };
         };
     };
 
-    public func upVote(_messageId: Nat): async Bool {
+    public func upVote(_messageId: Nat): async Result.Result<Text, Text> {
         let msg = switch(wall.get(_messageId)) {
-            case(null) return false;
+            case(null) return #err("Message not found.");
             case(?res) {
                 let updated = {
                     vote = res.vote + 1;
@@ -79,14 +79,14 @@ actor {
                     creator = res.creator;
                 };
                 wall.put(_messageId, updated);
-                return true;
+                return #ok("Message voted successfully.");
             };
         };
     };
    
-    public func downVote(_messageId: Nat): async Bool {
+    public func downVote(_messageId: Nat): async Result.Result<Text, Text> {
         let msg = switch(wall.get(_messageId)) {
-            case(null) return false;
+            case(null) return #err("Message not found.");
             case(?res) {
                 let updated = {
                     vote = res.vote - 1;
@@ -94,7 +94,7 @@ actor {
                     creator = res.creator;
                 };
                 wall.put(_messageId, updated);
-                return true;
+                return #ok("Message down voted successfully.");
             };
         };
     };
