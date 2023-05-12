@@ -26,54 +26,54 @@ actor Motocoin {
     //     return Principal.hash(a.owner);
     // };
 
-    public query func name(): async Text {
+    public query func name() : async Text {
         return _name;
     };
 
-    public query func symbol(): async Text {
+    public query func symbol() : async Text {
         return _symbol;
     };
 
-    public query func totalSupply(): async Nat {
+    public query func totalSupply() : async Nat {
         return _totalSupply;
     };
 
-    public query func balanceOf(_account: Account): async Nat {
-        switch(ledger.get(_account)) {
-            case(null) return 0;
-            case(?res) return res;
+    public query func balanceOf(_account : Account) : async Nat {
+        switch (ledger.get(_account)) {
+            case (null) return 0;
+            case (?res) return res;
         };
     };
 
-    public shared({caller}) func transfer(_from: Account, _to : Account, _amount : Nat): async Result.Result<(), Text> {
-        if(caller != _from.owner) return #err("You don't have permission.");
-        switch(ledger.get(_from)) {
-            case(null) return #err("You don't have tokens.");
-            case(?res) {
-                if(res < _amount) return #err("You don't have tokens.");
+    public shared ({ caller }) func transfer(_from : Account, _to : Account, _amount : Nat) : async Result.Result<(), Text> {
+        if (caller != _from.owner) return #err("You don't have permission.");
+        switch (ledger.get(_from)) {
+            case (null) return #err("You don't have tokens.");
+            case (?res) {
+                if (res < _amount) return #err("You don't have tokens.");
                 ledger.put(_from, (res - _amount));
-                switch(ledger.get(_to)) {
-                    case(null) ledger.put(_to, _amount);
-                    case(?balance) ledger.put(_to, (balance + _amount));
+                switch (ledger.get(_to)) {
+                    case (null) ledger.put(_to, _amount);
+                    case (?balance) ledger.put(_to, (balance + _amount));
                 };
-                return #ok(); 
+                return #ok();
             };
         };
     };
 
-    public func airdrop(): async Result.Result<(),Text> {
-        for((key, val) in ledger.entries()) {
+    public func airdrop() : async Result.Result<(), Text> {
+        for ((key, val) in ledger.entries()) {
             ledger.put(key, (val + 100));
         };
         return #ok();
     };
-    
+
     // TODO ??
-    func getAllStudentsPrincipal(): async [Principal] {
+    func getAllStudentsPrincipal() : async [Principal] {
         let buff = Buffer.Buffer<Principal>(0);
-        for(account in ledger.keys()) {
+        for (account in ledger.keys()) {
             buff.add(account.owner);
         };
         return Buffer.toArray(buff);
     };
-}
+};
