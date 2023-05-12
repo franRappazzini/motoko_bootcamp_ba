@@ -71,7 +71,7 @@ actor {
     };
 
     public func upVote(_messageId: Nat): async Result.Result<(), Text> {
-        let msg = switch(wall.get(_messageId)) {
+        switch(wall.get(_messageId)) {
             case(null) return #err("Message not found.");
             case(?res) {
                 let updated = {

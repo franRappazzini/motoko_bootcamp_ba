@@ -1,29 +1,79 @@
 import TrieMap "mo:base/TrieMap";
 import Principal "mo:base/Principal";
+import Blob "mo:base/Blob";
+import Bool "mo:base/Bool";
+import Hash "mo:base/Hash";
+import Nat "mo:base/Nat";
+import Result "mo:base/Result";
+import Type "./account";
+import Buffer "mo:base/Buffer";
 
 actor Motocoin {
-    type Subaccount = Blob;
-    type Account = {
-        owner : Principal;
-        subaccount : ?Subaccount;
+    type Subaccount = Type.Subaccount;
+    type Account = Type.Account;
+
+    private let _name = "MotoCoin";
+    private let _symbol = "MOC";
+    private let _totalSupply = 0;
+
+    let ledger = TrieMap.TrieMap<Account, Nat>(Type.customEqual, Type.customHash);
+
+    // func customEq(a: Account, b: Account): Bool {
+    //     return a.owner == b.owner;
+    // };
+
+    // func customHash(a: Account): () {
+    //     return Principal.hash(a.owner);
+    // };
+
+    public query func name(): async Text {
+        return _name;
     };
 
-    // let ledger = TrieMap.TrieMap<Account, Nat>(Principal.equal, Principal.hash);
+    public query func symbol(): async Text {
+        return _symbol;
+    };
 
-    // name : shared query () -> async Text;
+    public query func totalSupply(): async Nat {
+        return _totalSupply;
+    };
 
-//     // Returns the symbol of the token 
-//     symbol : shared query () -> async Text;
+    public query func balanceOf(_account: Account): async Nat {
+        switch(ledger.get(_account)) {
+            case(null) return 0;
+            case(?res) return res;
+        };
+    };
 
-//     // Returns the the total number of tokens on all accounts
-//     totalSupply : shared query () -> async Nat;
+    public shared({caller}) func transfer(_from: Account, _to : Account, _amount : Nat): async Result.Result<(), Text> {
+        if(caller != _from.owner) return #err("You don't have permission.");
+        switch(ledger.get(_from)) {
+            case(null) return #err("You don't have tokens.");
+            case(?res) {
+                if(res < _amount) return #err("You don't have tokens.");
+                ledger.put(_from, (res - _amount));
+                switch(ledger.get(_to)) {
+                    case(null) ledger.put(_to, _amount);
+                    case(?balance) ledger.put(_to, (balance + _amount));
+                };
+                return #ok(); 
+            };
+        };
+    };
 
-//     // Returns the balance of the account
-//     balanceOf : shared query (account : Account) -> async (Nat);
-
-//     // Transfer tokens to another account
-//     transfer : shared (from: Account, to : Account, amount : Nat) -> async Result.Result<(), Text>;
-
-//     // Airdrop 1000 MotoCoin to any student that is part of the Bootcamp.
-//     airdrop : shared () -> async Result.Result<(),Text>;
+    public func airdrop(): async Result.Result<(),Text> {
+        for((key, val) in ledger.entries()) {
+            ledger.put(key, (val + 100));
+        };
+        return #ok();
+    };
+    
+    // TODO ??
+    func getAllStudentsPrincipal(): async [Principal] {
+        let buff = Buffer.Buffer<Principal>(0);
+        for(account in ledger.keys()) {
+            buff.add(account.owner);
+        };
+        return Buffer.toArray(buff);
+    };
 }

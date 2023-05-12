@@ -17,3 +17,5 @@
 //     // Airdrop 1000 MotoCoin to any student that is part of the Bootcamp.
 //     airdrop : shared () -> async Result.Result<(),Text>;
 // }
+
+// getAllStudentsPrincipal : shared () -> async [Principal];
