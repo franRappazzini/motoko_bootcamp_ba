@@ -2,6 +2,7 @@ import Int "mo:base/Int";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Principal "mo:base/Principal";
+import Float "mo:base/Float";
 
 actor Calculator {
     public type TestResult = Result.Result<(), TestError>;
@@ -10,36 +11,47 @@ actor Calculator {
         #UnexpectedError : Text;
     };
 
-    var calc : Int = 1;
+    var counter : Float = 1;
 
-    public func add(num : Int) : async Int {
-        calc += num;
-        return calc;
+    public func add(num : Float) : async Float {
+        counter += num;
+        return counter;
     };
 
-    public func sub(num : Int) : async Int {
-        calc -= num;
-        return calc;
+    public func sub(num : Float) : async Float {
+        counter -= num;
+        return counter;
     };
 
-    public func mult(num : Int) : async Int {
-        calc *= num;
-        return calc;
+    public func mul(num : Float) : async Float {
+        counter *= num;
+        return counter;
     };
 
-    public func div(num : Int) : async ?Int {
+    public func div(num : Float) : async ?Float {
         if (num == 0) return null;
-        calc /= num;
-        return ?calc;
+        counter /= num;
+        return ?counter;
     };
 
-    public func restart() : async Int {
-        calc := 0;
-        return calc;
+    public func reset() : async () {
+        counter := 0;
     };
 
-    public query func getCalc() : async Int {
-        return calc;
+    public query func see() : async Float {
+        return counter;
+    };
+
+    public func power(num : Float) : async Float {
+        return counter ** num;
+    };
+
+    public func sqrt() : async Float {
+        return Float.sqrt(counter);
+    };
+
+    public func floor() : async Float {
+        return Float.floor(counter);
     };
 
     // public func test(_canisterId : Principal) : async TestResult {
