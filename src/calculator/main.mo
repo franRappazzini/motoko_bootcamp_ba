@@ -5,12 +5,6 @@ import Principal "mo:base/Principal";
 import Float "mo:base/Float";
 
 actor Calculator {
-    public type TestResult = Result.Result<(), TestError>;
-    public type TestError = {
-        #UnexpectedValue : Text;
-        #UnexpectedError : Text;
-    };
-
     var counter : Float = 1;
 
     public func add(num : Float) : async Float {
