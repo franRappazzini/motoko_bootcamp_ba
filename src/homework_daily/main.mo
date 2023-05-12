@@ -5,7 +5,7 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-actor {
+actor class Homework() {
     type Homework = {
         title : Text;
         description : Text;
@@ -82,5 +82,10 @@ actor {
         };
 
         return Buffer.toArray(hwPending);
+    };
+
+    public func verifyWork(_canId : Principal, _pId : Principal) : async Result.Result<(), Text> {
+
+        return #ok();
     };
 };

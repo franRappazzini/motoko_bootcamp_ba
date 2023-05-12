@@ -164,4 +164,9 @@ actor {
     };
 
     // TODO preupgrade y postupgrade
+
+    public func verifyWork(_canId : Principal, _pId : Principal) : async Result.Result<(), Text> {
+
+        return #ok();
+    };
 };

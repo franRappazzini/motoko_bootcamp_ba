@@ -14,7 +14,7 @@ actor Motocoin {
 
     private let _name = "MotoCoin";
     private let _symbol = "MOC";
-    private let _totalSupply = 0;
+    private var _totalSupply = 0;
 
     let ledger = TrieMap.TrieMap<Account, Nat>(Type.customEqual, Type.customHash);
 
