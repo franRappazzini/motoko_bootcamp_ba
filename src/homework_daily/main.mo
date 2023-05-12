@@ -5,7 +5,7 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-actor class Homework() {
+actor {
     type Homework = {
         title : Text;
         description : Text;
