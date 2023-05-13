@@ -8,6 +8,7 @@ import Buffer "mo:base/Buffer";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
+import Order "mo:base/Order";
 
 actor {
     public type Content = {
@@ -116,20 +117,16 @@ actor {
         return ?Buffer.toArray(buffMsg);
     };
 
-    // public query func getAllMessagesRanked(): async ?[Message] {
-    //     let buffMsg = Buffer.Buffer<Message>(1);
-    //     for(msg in wall.vals()) {
-    //         buffMsg.add(msg);
-    //     };
-    //     let arrMsg = Buffer.toArray<Message>(buffMsg);
+    public query func getAllMessagesRanked() : async ?[Message] {
+        let buffMsg = Buffer.Buffer<Message>(1);
+        for (msg in wall.vals()) {
+            buffMsg.add(msg);
+        };
+        let arrMsg = Buffer.toArray<Message>(buffMsg);
 
-    //     return Array.sortInPlace(arrMsg, compare)
-    // };
-
-    // // Función de comparación
-    // func compare(a: Message, b: Message) : Bool {
-    //     return a.vote > b.vote;
-    // };
+        let order = Array.sort<Message>(arrMsg, func(a : Message, b : Message) { return Int.compare(a.vote, b.vote) });
+        return ?order;
+    };
 
     public shared ({ caller }) func addMyProfile(_profile : StudentProfile) : async Result.Result<(), Text> {
         studentProfileStore.put(caller, _profile);
@@ -163,6 +160,7 @@ actor {
         };
     };
 
+    // day 5
     // TODO preupgrade y postupgrade
 
     public func verifyWork(_canId : Principal, _pId : Principal) : async Result.Result<(), Text> {
