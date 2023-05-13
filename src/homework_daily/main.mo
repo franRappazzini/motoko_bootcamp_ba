@@ -5,7 +5,7 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 
-actor {
+actor class Homework() {
     type Homework = {
         title : Text;
         description : Text;
@@ -20,9 +20,11 @@ actor {
         return homeworkDiary.size() - 1;
     };
 
-    public func getHomework(_index : Nat) : async Result.Result<?Homework, ()> {
-        let hw = homeworkDiary.get(_index);
-        return #ok(?hw);
+    public func getHomework(_index : Nat) : async Result.Result<Homework, ()> {
+        switch (homeworkDiary.getOpt(_index)) {
+            case (null) return #err();
+            case (?res) return #ok(res);
+        };
     };
 
     public func updateHomework(_index : Nat, _hw : Homework) : async Result.Result<(), Text> {
@@ -35,7 +37,7 @@ actor {
         };
     };
 
-    public func markAsComplete(_index : Nat) : async Result.Result<(), Text> {
+    public func markAsCompleted(_index : Nat) : async Result.Result<(), Text> {
         switch (?homeworkDiary.get(_index)) {
             case (null) return #err("Homework doesn't exist.");
             case (?res) {
