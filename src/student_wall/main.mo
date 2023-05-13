@@ -9,33 +9,25 @@ import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
+import Blob "mo:base/Blob";
+import Type "./Types";
 
-actor {
-    public type Content = {
-        #Text : Text;
-        #Image : Blob;
-        #Video : Blob;
-    };
+actor class StudentWall() {
+    type StudentProfile = Type.StudentProfile;
+    type Content = Type.Content;
+    type Message = Type.Message;
 
-    type Message = {
-        vote : Int;
-        content : Content;
-        creator : Principal;
-    };
-
-    type StudentProfile = {
-        name : Text;
-        team : Text;
-        graduate : Bool;
+    func customHash(n : Nat) : Hash.Hash {
+        return Text.hash(Nat.toText(n));
     };
 
     var messageId : Nat = 0;
-    let wall = HashMap.HashMap<Nat, Message>(1, Nat.equal, Hash.hash);
+    let wall = HashMap.HashMap<Nat, Message>(1, Nat.equal, customHash);
     let studentProfileStore = HashMap.HashMap<Principal, StudentProfile>(1, Principal.equal, Principal.hash);
 
     public shared ({ caller }) func writeMessage(_c : Content) : async Nat {
         let newMsg = {
-            vote = messageId;
+            vote = 0;
             content = _c;
             creator = caller;
         };
@@ -45,9 +37,13 @@ actor {
         return messageId - 1;
     };
 
-    public query func getMessage(_messageId : Nat) : async Result.Result<?Message, ()> {
-        let msg = wall.get(_messageId);
-        return #ok(msg);
+    public query func getMessage(_messageId : Nat) : async Result.Result<Message, Text> {
+        // let msg = wall.get(_messageId);
+        // return #ok(msg);
+        switch (wall.get(_messageId)) {
+            case (null) return #err("Message doesn't exist.");
+            case (?res) return #ok(res);
+        };
     };
 
     public shared ({ caller }) func updateMessage(_messageId : Nat, _c : Content) : async Result.Result<(), Text> {
@@ -108,24 +104,24 @@ actor {
         };
     };
 
-    public query func getAllMessages() : async ?[Message] {
+    public query func getAllMessages() : async [Message] {
         let buffMsg = Buffer.Buffer<Message>(1);
         for (msg in wall.vals()) {
             buffMsg.add(msg);
         };
 
-        return ?Buffer.toArray(buffMsg);
+        return Buffer.toArray(buffMsg);
     };
 
-    public query func getAllMessagesRanked() : async ?[Message] {
+    public query func getAllMessagesRanked() : async [Message] {
         let buffMsg = Buffer.Buffer<Message>(1);
         for (msg in wall.vals()) {
             buffMsg.add(msg);
         };
         let arrMsg = Buffer.toArray<Message>(buffMsg);
 
-        let order = Array.sort<Message>(arrMsg, func(a : Message, b : Message) { return Int.compare(a.vote, b.vote) });
-        return ?order;
+        let order = Array.sort<Message>(arrMsg, func(a : Message, b : Message) { return Int.compare(b.vote, a.vote) });
+        return order;
     };
 
     public shared ({ caller }) func addMyProfile(_profile : StudentProfile) : async Result.Result<(), Text> {
