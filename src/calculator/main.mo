@@ -4,8 +4,8 @@ import Text "mo:base/Text";
 import Principal "mo:base/Principal";
 import Float "mo:base/Float";
 
-actor Calculator {
-    var counter : Float = 1;
+actor class Calculator() {
+    stable var counter : Float = 0;
 
     public func add(num : Float) : async Float {
         counter += num;
@@ -22,10 +22,10 @@ actor Calculator {
         return counter;
     };
 
-    public func div(num : Float) : async ?Float {
-        if (num == 0) return null;
+    public func div(num : Float) : async Float {
+        // if (num == 0) return null;
         counter /= num;
-        return ?counter;
+        return counter;
     };
 
     public func reset() : async () {
@@ -37,7 +37,8 @@ actor Calculator {
     };
 
     public func power(num : Float) : async Float {
-        return counter ** num;
+        counter := counter ** num;
+        return counter;
     };
 
     public func sqrt() : async Float {
