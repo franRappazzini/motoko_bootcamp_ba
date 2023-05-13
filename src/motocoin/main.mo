@@ -14,17 +14,9 @@ actor Motocoin {
 
     private let _name = "MotoCoin";
     private let _symbol = "MOC";
-    private var _totalSupply = 0;
+    stable var _totalSupply = 0;
 
     let ledger = TrieMap.TrieMap<Account, Nat>(Type.customEqual, Type.customHash);
-
-    // func customEq(a: Account, b: Account): Bool {
-    //     return a.owner == b.owner;
-    // };
-
-    // func customHash(a: Account): () {
-    //     return Principal.hash(a.owner);
-    // };
 
     public query func name() : async Text {
         return _name;
@@ -64,6 +56,7 @@ actor Motocoin {
     public func airdrop() : async Result.Result<(), Text> {
         for ((key, val) in ledger.entries()) {
             ledger.put(key, (val + 100));
+            _totalSupply += 100;
         };
         return #ok();
     };
