@@ -15,6 +15,10 @@
     "motocoin": {
       "main": "src/motocoin/main.mo",
       "type": "motoko"
+    },
+    "verifier": {
+      "main": "src/verifier/main.mo",
+      "type": "motoko"
     }
   },
   "defaults": {
