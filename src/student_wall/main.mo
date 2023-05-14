@@ -124,43 +124,44 @@ actor class StudentWall() {
         return order;
     };
 
-    public shared ({ caller }) func addMyProfile(_profile : StudentProfile) : async Result.Result<(), Text> {
-        studentProfileStore.put(caller, _profile);
-        return #ok();
-    };
-
-    public query func seeAProfile(_p : Principal) : async Result.Result<StudentProfile, Text> {
-        switch (studentProfileStore.get(_p)) {
-            case (null) return #err("User doesn't exist.");
-            case (?res) return #ok(res);
-        };
-    };
-
-    public shared ({ caller }) func updateMyProfile(_profile : StudentProfile) : async Result.Result<(), Text> {
-        switch (studentProfileStore.get(caller)) {
-            case (null) return #err("User doesn't exist.");
-            case (?res) {
-                studentProfileStore.put(caller, _profile);
-                return #ok();
-            };
-        };
-    };
-
-    public shared ({ caller }) func deleteMyProfile() : async Result.Result<(), Text> {
-        switch (studentProfileStore.get(caller)) {
-            case (null) return #err("User does't exist.");
-            case (?res) {
-                studentProfileStore.delete(caller);
-                return #ok();
-            };
-        };
-    };
-
     // day 5
+
+    // public shared ({ caller }) func addMyProfile(_profile : StudentProfile) : async Result.Result<(), Text> {
+    //     studentProfileStore.put(caller, _profile);
+    //     return #ok();
+    // };
+
+    // public query func seeAProfile(_p : Principal) : async Result.Result<StudentProfile, Text> {
+    //     switch (studentProfileStore.get(_p)) {
+    //         case (null) return #err("User doesn't exist.");
+    //         case (?res) return #ok(res);
+    //     };
+    // };
+
+    // public shared ({ caller }) func updateMyProfile(_profile : StudentProfile) : async Result.Result<(), Text> {
+    //     switch (studentProfileStore.get(caller)) {
+    //         case (null) return #err("User doesn't exist.");
+    //         case (?res) {
+    //             studentProfileStore.put(caller, _profile);
+    //             return #ok();
+    //         };
+    //     };
+    // };
+
+    // public shared ({ caller }) func deleteMyProfile() : async Result.Result<(), Text> {
+    //     switch (studentProfileStore.get(caller)) {
+    //         case (null) return #err("User does't exist.");
+    //         case (?res) {
+    //             studentProfileStore.delete(caller);
+    //             return #ok();
+    //         };
+    //     };
+    // };
+
     // TODO preupgrade y postupgrade
 
-    public func verifyWork(_canId : Principal, _pId : Principal) : async Result.Result<(), Text> {
+    // public func verifyWork(_canId : Principal, _pId : Principal) : async Result.Result<(), Text> {
 
-        return #ok();
-    };
+    //     return #ok();
+    // };
 };

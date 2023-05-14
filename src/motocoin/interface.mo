@@ -1,8 +1,8 @@
 // actor {
-//     // Returns the name of the token 
+//     // Returns the name of the token
 //     name : shared query () -> async Text;
 
-//     // Returns the symbol of the token 
+//     // Returns the symbol of the token
 //     symbol : shared query () -> async Text;
 
 //     // Returns the the total number of tokens on all accounts

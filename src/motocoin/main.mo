@@ -8,7 +8,7 @@ import Result "mo:base/Result";
 import Type "./account";
 import Buffer "mo:base/Buffer";
 
-actor Motocoin {
+actor class MotoCoin() {
     type Subaccount = Type.Subaccount;
     type Account = Type.Account;
 
@@ -17,6 +17,9 @@ actor Motocoin {
     stable var _totalSupply = 0;
 
     let ledger = TrieMap.TrieMap<Account, Nat>(Type.customEqual, Type.customHash);
+    let students = actor ("rww3b-zqaaa-aaaam-abioa-cai") : actor {
+        getAllStudentsPrincipal : shared () -> async [Principal];
+    };
 
     public query func name() : async Text {
         return _name;
@@ -54,19 +57,20 @@ actor Motocoin {
     };
 
     public func airdrop() : async Result.Result<(), Text> {
-        for ((key, val) in ledger.entries()) {
-            ledger.put(key, (val + 100));
-            _totalSupply += 100;
+        try {
+            let studentsPrincipal = await students.getAllStudentsPrincipal();
+            for (pid in studentsPrincipal.vals()) {
+                let newStudent : Account = {
+                    owner = pid;
+                    subaccount = null;
+                };
+                let currentBalance = await balanceOf(newStudent);
+                ledger.put(newStudent, (currentBalance + 100));
+                _totalSupply += 100;
+            };
+            return #ok();
+        } catch e {
+            return #err("err");
         };
-        return #ok();
-    };
-
-    // TODO ??
-    func getAllStudentsPrincipal() : async [Principal] {
-        let buff = Buffer.Buffer<Principal>(0);
-        for (account in ledger.keys()) {
-            buff.add(account.owner);
-        };
-        return Buffer.toArray(buff);
     };
 };
